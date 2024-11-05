@@ -9,5 +9,9 @@ urlpatterns = [
  path('list_books/', views.list_books, name= "books.list_books"),
  path('<int:bookId>/', views.viewbook, name="books.view_one_book"),  # Updated name
  path('aboutus/', views.aboutus, name="books.aboutus"),
+ path('html5/links/', views.links_page, name='books.links'),
+ path('html5/text/formatting', views.formatting, name='formatting'),
+ path('html5/listing', views.listing, name='listing'),
+ path('html5/tables', views.tables, name='tables'),
 
 ]
