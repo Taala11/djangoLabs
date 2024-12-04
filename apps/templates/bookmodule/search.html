@@ -28,7 +28,7 @@
 </style>
 {% endblock stylesheets %}
 {% block content %}
-<form class="searchForm" method="post" action="{% url 'search' %}">
+<form class="searchForm" method="post" action="">
  {% csrf_token %}
  <label>Keywords:</label>
  <input type="text" name="keyword" placeholder="enter a keyword"/>

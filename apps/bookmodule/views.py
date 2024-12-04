@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .models import Book
+
 
 # Create your views here.
 #from django.http import HttpResponse
@@ -40,6 +42,21 @@ def __getBooksList():
  book2 = {'id':56788765,'title':'Reversing: Secrets of Reverse Engineering', 'author':'E. Eilam'}
  book3 = {'id':43211234, 'title':'The Hundred-Page Machine Learning Book', 'author':'Andriy Burkov'}
  return [book1, book2, book3]
+
 def search_results(request):
     books = request.session.pop('filtered_books', [])  # Get and clear the session data
     return render(request, 'bookmodule/bookList.html', {'books': books})
+
+def simple_query(request):
+    mybooks = Book.objects.filter(title__icontains='and') # <- multiple objects
+    return render(request, 'bookmodule/bookList.html', {'books':mybooks})
+
+def lookup_query(request):
+    mybooks = Book.objects.filter(author__isnull=False)\
+                          .filter(title__icontains='and')\
+                          .filter(edition__gte=2)\
+                          .exclude(price__lte=100)[:10]
+    if len(mybooks)>=1:
+        return render(request, 'bookmodule/bookList.html', {'books':mybooks})
+    else:
+        return render(request, 'bookmodule/index.html')

@@ -3,6 +3,12 @@
 {% block title %} Book Search Results {% endblock title %}
 
 {% block content %}
+<h2>Books List</h2>
+{% for obj in books %}
+    <p>ID: {{ book.id }}, Title: {{ book.title }}, Author: {{ book.author }}, Edition: {{ book.edition }}, Price: {{ book.price }}</p>
+    <hr>
+    {% endfor %}
+    
 <h2>Search Results</h2>
 {% if books %}
     <ul>
