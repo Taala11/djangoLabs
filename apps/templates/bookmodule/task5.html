@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task 5 - Book Statistics</title>
+</head>
+<body>
+    <h1>Book Statistics</h1>
+    <ul>
+        <li>Total Number of Books: {{ aggregate_data.total_books }}</li>
+        <li>Total Price of All Books: ${{ aggregate_data.total_price }}</li>
+        <li>Average Book Price: ${{ aggregate_data.avg_price|floatformat:2 }}</li>
+        <li>Maximum Book Price: ${{ aggregate_data.max_price }}</li>
+        <li>Minimum Book Price: ${{ aggregate_data.min_price }}</li>
+    </ul>
+    {% if aggregate_data.total_books == 0 %}
+        <p>No books available to calculate statistics.</p>
+    {% endif %}
+</body>
+</html>

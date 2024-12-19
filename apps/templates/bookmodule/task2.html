@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task 2 - Books</title>
+</head>
+<body>
+    <h1>Books with Editions > 2 and 'qu' in Title or Author</h1>
+    {% if books %}
+        <ul>
+            {% for book in books %}
+                <li>
+                    {{ book.title }} by {{ book.author }} - {{ book.edition }} editions
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No books match the criteria.</p>
+    {% endif %}
+</body>
+</html>
