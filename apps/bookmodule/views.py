@@ -1,8 +1,9 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
 from .models import Book, Student, Address
 from django.db.models import Avg, Max, Min, Sum, Count
+from apps.bookmodule.forms import BookForm
 
 
 # Create your views here.
@@ -100,3 +101,85 @@ def task7(request):
     # Count the number of students in each city
     student_counts = Address.objects.annotate(student_count=Count('student'))
     return render(request, 'bookmodule/task7.html', {'student_counts': student_counts})
+
+def list_books2(request):
+    # Fetch all books from the database
+    books = Book.objects.all()
+    return render(request, 'bookmodule/list_books2.html', {'books': books})
+
+def add_book(request):
+    if request.method == 'POST':
+        # Get data from the form
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        price = request.POST.get('price')
+        
+        # Create and save a new book
+        Book.objects.create(title=title, author=author, price=price)
+        
+        # Redirect to the book list
+        return redirect('list_books')
+    
+    # Render the add book form
+    return render(request, 'bookmodule/add_book.html')
+
+
+def edit_book(request, id):
+    # Fetch the book to be edited
+    book = get_object_or_404(Book, id=id)
+
+    if request.method == 'POST':
+        # Update the book with form data
+        book.title = request.POST.get('title')
+        book.author = request.POST.get('author')
+        book.price = request.POST.get('price')
+        book.save()  # Save changes to the database
+        
+        # Redirect to the book list
+        return redirect('list_books')
+    
+    # Render the edit form with existing book data
+    return render(request, 'bookmodule/edit_book.html', {'book': book})
+
+def delete_book(request, id):
+    # Fetch the book to be deleted
+    book = get_object_or_404(Book, id=id)
+    
+    # Delete the book
+    book.delete()
+    
+    # Redirect to the book list
+    return redirect('bookmodule/list_books2')
+
+def list_books2_form(request):
+    books = Book.objects.all()
+    return render(request, 'bookmodule/list_books2_form.html', {'books': books})
+
+def add_book_form(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books2_form')
+    else:
+        form = BookForm()
+    return render(request, 'bookmodule/add_book_form.html', {'form': form})
+
+def edit_book_form(request, id):
+    book = get_object_or_404(Book, id=id)
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books2_form')
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'bookmodule/edit_book_form.html', {'form': form})
+
+def delete_book_form(request, id):
+    book = get_object_or_404(Book, id=id)
+    if request.method == 'POST':
+        book.delete()
+        return redirect('list_books2_form')
+    return render(request, 'bookmodule/delete_book_form.html', {'book': book})
+
