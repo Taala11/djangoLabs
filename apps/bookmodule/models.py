@@ -16,7 +16,14 @@ class Address(models.Model):
 class Student(models.Model):
     name = models.CharField(max_length=100)  # Student name
     age = models.IntegerField()  # Student age
-    address = models.ForeignKey(Address, on_delete=models.CASCADE)  # Link to Address
+    addresses = models.ManyToManyField(Address)  # Correct field name for many-to-many
 
     def __str__(self):
         return self.name
+    
+class Gallery(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='gallery/')  # Path where images will be uploaded
+
+    def __str__(self):
+        return self.title

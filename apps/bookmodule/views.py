@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
-from .models import Book, Student, Address
+from .models import Book, Student, Address, Gallery
 from django.db.models import Avg, Max, Min, Sum, Count
-from apps.bookmodule.forms import BookForm
+from apps.bookmodule.forms import BookForm, StudentForm, GalleryForm
 
 
 # Create your views here.
@@ -182,4 +182,60 @@ def delete_book_form(request, id):
         book.delete()
         return redirect('list_books2_form')
     return render(request, 'bookmodule/delete_book_form.html', {'book': book})
+
+def list_students(request):
+    students = Student.objects.all()
+    return render(request, 'bookmodule/list_students.html', {'students': students})
+
+def add_student(request):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            student = form.save()
+            form.save_m2m()  # Save many-to-many relationships
+            return redirect('list_students')
+    else:
+        form = StudentForm()
+    return render(request, 'bookmodule/add_student.html', {'form': form})
+
+def edit_student(request, id):
+    student = get_object_or_404(Student, id=id)
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            student = form.save()
+            form.save_m2m()  # Save many-to-many relationships
+            return redirect('list_students')
+    else:
+        form = StudentForm(instance=student)
+    return render(request, 'bookmodule/edit_student.html', {'form': form})
+
+def delete_student(request, id):
+    student = get_object_or_404(Student, id=id)
+    if request.method == 'POST':
+        student.delete()
+        return redirect('list_students')
+    return render(request, 'bookmodule/delete_student.html', {'student': student})
+
+def list_gallery(request):
+    images = Gallery.objects.all()
+    return render(request, 'bookmodule/list_gallery.html', {'images': images})
+
+def add_gallery(request):
+    if request.method == 'POST':
+        form = GalleryForm(request.POST, request.FILES)  # Include FILES for image upload
+        if form.is_valid():
+            form.save()
+            return redirect('list_gallery')
+    else:
+        form = GalleryForm()
+    return render(request, 'bookmodule/add_gallery.html', {'form': form})
+
+def delete_gallery(request, id):
+    image = get_object_or_404(Gallery, id=id)
+    if request.method == 'POST':
+        image.delete()
+        return redirect('list_gallery')
+    return render(request, 'bookmodule/delete_gallery.html', {'image': image})
+
 

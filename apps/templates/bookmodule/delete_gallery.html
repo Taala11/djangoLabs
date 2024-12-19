@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Image</title>
+</head>
+<body>
+    <h1>Delete Image</h1>
+    <p>Are you sure you want to delete "{{ image.title }}"?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+    </form>
+    <a href="{% url 'list_gallery' %}">Cancel</a>
+</body>
+</html>
